@@ -13,7 +13,7 @@
        <table class="table text-secondary">
   <thead class="thead-light">
     <tr>
-      <th scope="col" v-for="item in fields">{{item}}</th>
+      <th scope="col" v-for="item in tableFields">{{item}}</th>
     </tr>
   </thead>
   <tbody class="bg-light">
@@ -60,12 +60,12 @@
 <script>
 import { BIconQuestionFill, BIconEye, BIconInboxes, BIconDocumentText } from 'bootstrap-vue';
 export default {
-  props: ['list', 'fields'],
+  props: ['list', 'tableFields'],
   components: {
     BIconQuestionFill,
     BIconEye,
     BIconInboxes,
-    BIconDocumentText
+    BIconDocumentText,
   } 
 }
 </script>

@@ -17,28 +17,44 @@
           label-cols-lg="3"
           label="URL"
           label-for="input-horizontal"
+          class="pb-2"
         >
           <b-input-group size="lg" prepend="http(s)://">
-            <b-form-input v-model="url" placeholder="Your site"></b-form-input>
+            <b-form-input v-model="url"
+             v-validate="{url: {require_protocol: false }, uniqueUrl: list}"
+             name="url"
+             placeholder="Your site"></b-form-input>
+             <span class="sites__input-error">
+              {{ errors.first('url') }}
+            </span>
           </b-input-group>
         </b-form-group>
         <b-form-group
+            class="pb-2"
             id="fieldset-horizontal"
             label-cols-sm="4"
             label-cols-lg="3"
             label="Server IP"
             label-for="input-horizontal"
           >
-           <b-form-input v-model="serverIp" placeholder="Your server IP"></b-form-input>
+           <b-form-input  v-validate="{ip: true, uniqueIp: list}"
+            name="serverIp"
+            data-vv-as="Server IP"
+            v-model="serverIp"
+            placeholder="Your server IP">
+           </b-form-input>
+           <span class="sites__input-error">{{ errors.first('serverIp') }}</span>
         </b-form-group>
         <b-form-group
+            class="pb-2"
             id="fieldset-horizontal"
             label-cols-sm="4"
             label-cols-lg="3"
             label="Server name"
             label-for="input-horizontal"
           >
-          <b-form-input v-model="serverName" placeholder="Your server name"></b-form-input>
+          <b-form-input v-validate="'alpha|min:3|max:20|required'" name="serverName" v-model="serverName" placeholder="Your server name"></b-form-input>
+          <span class="sites__input-error">{{ errors.first('serverName') }}</span>
         </b-form-group>
         <b-form-group
             id="fieldset-horizontal"
@@ -69,6 +85,42 @@
 
 <script>
   import { BIconQuestion, BIconCameraVideo, BIconCheckCircle } from 'bootstrap-vue'
+  import VeeValidate, { Validator } from 'vee-validate';
+  
+  const uniqueUrl = {
+    getMessage(field) {
+      return `Such ${field} already exists.`;
+    },
+    validate(value, args) {
+      if (value) {
+        let data = [];
+        args.map(el => data.push(el.url));
+        return data.indexOf(value) === -1;
+      }
+      return false;
+    }
+  };
+  const uniqueIp = {
+    getMessage(field) {
+      return `Such ${field} already exists.`;
+    },
+    validate(value, args) {
+      if (value) {
+        let data = [];
+        args.map(el => data.push(el.server.ip));
+        return data.indexOf(value) === -1;
+      }
+      return false;
+    }
+  };
+
+  Validator.extend("uniqueUrl", uniqueUrl, {
+    immediate: false
+  });
+  Validator.extend("uniqueIp", uniqueIp, {
+    immediate: false
+  });
+
   export default {
     data() {
       return {
@@ -77,11 +129,12 @@
         serverName: ''
       }
     },
-    props: ['options'],
+    props: ['options', 'list'],
     components: {
       BIconQuestion,
       BIconCameraVideo,
-      BIconCheckCircle
+      BIconCheckCircle,
+      VeeValidate
     },
     methods: {
       addItem(site) {
@@ -98,7 +151,6 @@
           this.serverIp = '',
           this.serverName = ''
         }
-        
       }
     }
     }
@@ -123,5 +175,12 @@
   }
   .sites__create {
     margin-bottom: 40px;
+  }
+  .sites__input-error {
+    position: absolute;
+    color: red;
+    bottom: 0;
+    transform: translateY(100%);
+    font-size: .8rem;
   }
 </style>

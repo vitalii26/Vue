@@ -1,7 +1,7 @@
 <template>
     <div class="sites">
-        <sites-create @add-item="addItem" :options="createOptions"></sites-create>
-        <sites-list @remove-site="removeSite" :list="list" :fields="tableFields"></sites-list>
+        <sites-create @add-item="addItem" :list="list" :options="createOptions"></sites-create>
+        <sites-list @remove-site="removeSite" :list="list" :table-fields="tableFields"></sites-list>
     </div>
 </template>
 
