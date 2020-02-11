@@ -44,7 +44,9 @@
       </th>
       <th scope="row">
         <b-icon-eye></b-icon-eye>
-        <b-button variant="outline-danger ml-2">
+        <b-button
+        @click="$emit('remove-site', item)"
+        variant="outline-danger ml-2">
           &times;
         </b-button>
       </th>
@@ -64,8 +66,7 @@ export default {
     BIconEye,
     BIconInboxes,
     BIconDocumentText
-  }
-  
+  } 
 }
 </script>
 

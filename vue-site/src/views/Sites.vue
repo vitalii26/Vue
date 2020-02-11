@@ -1,7 +1,7 @@
 <template>
     <div class="sites">
         <sites-create @add-item="addItem" :options="createOptions"></sites-create>
-        <sites-list :list="list" :fields="tableFields"></sites-list>
+        <sites-list @remove-site="removeSite" :list="list" :fields="tableFields"></sites-list>
     </div>
 </template>
 
@@ -42,6 +42,17 @@ export default {
             appendToast: true
             })
         },
+        removeSite(item) {
+            this.list = this.list.filter(i => i.server.ip !== item.server.ip);
+            this.$bvToast.toast(`Site ${item.url} successfully deleted on server ${item.server.ip}`, {
+            title: `Deleted`,
+            toaster: 'b-toaster-top-right',
+            variant: 'danger',
+            solid: true,
+            appendToast: true
+            })
+            
+        }
         
         }
     }
