@@ -1,6 +1,6 @@
 <template>
     <div class="sites">
-        <sites-create :options="createOptions"></sites-create>
+        <sites-create @add-item="addItem" :options="createOptions"></sites-create>
         <sites-list :list="list" :fields="tableFields"></sites-list>
     </div>
 </template>
@@ -15,10 +15,10 @@ export default {
             list: [],
             tableFields: ['url', 'ip', 'server', 'user', 'dns', 'lb', 'log'],
             createOptions: [
-          { text: 'Staging Site', value: 'staging' },
-          { text: 'Automatic Updates', value: 'authomatic' },
-          { text: 'Update DNS', value: 'dns' }
-        ]
+                { text: 'Staging Site', value: 'staging' },
+                { text: 'Automatic Updates', value: 'authomatic' },
+                { text: 'Update DNS', value: 'dns' }
+            ]
 
         }
     },
@@ -31,8 +31,20 @@ export default {
     components: {
         SitesCreate,
         SitesList
+    },
+    methods: {
+        addItem(site) {
+            this.list.push(site);
+            this.$bvToast.toast(`Site ${site.url} successfully stored on server ${site.server.ip}`, {
+            title: `Successfull`,
+            toaster: 'b-toaster-top-right',
+            solid: true,
+            appendToast: true
+            })
+        },
+        
+        }
     }
-}
 </script>
 
 <style>

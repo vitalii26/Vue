@@ -1,7 +1,7 @@
 <<template>
   <div class="sites__create">
     <div class="container">
-      <b-form class="bg-light pb-4 px-3 text-secondary">
+      <b-form @submit.prevent="addItem" class="bg-light pb-4 px-3 text-secondary">
         <div class="row mb-4">
           <div class="col-12 d-flex justify-content-between bg-white p-2">
             <h2>Add New Site</h2>
@@ -19,26 +19,26 @@
           label-for="input-horizontal"
         >
           <b-input-group size="lg" prepend="http(s)://">
-            <b-form-input  placeholder="Your site"></b-form-input>
+            <b-form-input v-model="url" placeholder="Your site"></b-form-input>
           </b-input-group>
         </b-form-group>
         <b-form-group
             id="fieldset-horizontal"
             label-cols-sm="4"
             label-cols-lg="3"
-            label="Server"
+            label="Server IP"
             label-for="input-horizontal"
           >
-          <b-form-select></b-form-select>
+           <b-form-input v-model="serverIp" placeholder="Your server IP"></b-form-input>
         </b-form-group>
         <b-form-group
             id="fieldset-horizontal"
             label-cols-sm="4"
             label-cols-lg="3"
-            label="System user"
+            label="Server name"
             label-for="input-horizontal"
           >
-          <b-form-select></b-form-select>
+          <b-form-input v-model="serverName" placeholder="Your server name"></b-form-input>
         </b-form-group>
         <b-form-group
             id="fieldset-horizontal"
@@ -54,13 +54,14 @@
           label-cols-lg="3">
           <b-form-checkbox-group
             id="checkbox-group-1"
-            v-model="selected"
             :options="options"
             name="flavour-1"
             class="mb-4"
           ></b-form-checkbox-group>
         </b-form-group>
-         <b-button variant="info"><b-icon-check-circle></b-icon-check-circle>Add Site</b-button>
+         <b-button type="submit"
+          variant="info"><b-icon-check-circle></b-icon-check-circle>Add Site
+        </b-button>
       </b-form>
     </div>
   </div>
@@ -71,8 +72,9 @@
   export default {
     data() {
       return {
-        selected: []
-        
+        url: '',
+        serverIp: '',
+        serverName: ''
       }
     },
     props: ['options'],
@@ -82,7 +84,23 @@
       BIconCheckCircle
     },
     methods: {
+      addItem(site) {
+        if (this.url && this.serverIp && this.serverName) {
+          const site = {
+            url: this.url,
+            server: {
+              name: this.serverName,
+              ip: this.serverIp
+            }
+          }
+          this.$emit('add-item', site);
+          this.url = '',
+          this.serverIp = '',
+          this.serverName = ''
+        }
+        
       }
+    }
     }
 </script>
 <style scoped>
